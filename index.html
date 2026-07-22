@@ -9,7 +9,7 @@
     <!-- Google Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Kiwi+Maru:wght@400;500&family=Zen+Maru+Gothic:wght@500;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Kiwi+Maru:wght@400;500;700&family=Zen+Maru+Gothic:wght@500;700&display=swap" rel="stylesheet">
     <!-- FontAwesome icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
@@ -39,29 +39,28 @@
             box-shadow: inset 0 2px 4px rgba(0,0,0,0.6);
         }
 
-        /* 可認性を高めた付箋スタイル */
+        /* 可視性と一覧性を最適化したコンパクト付箋 */
         .sticky-note {
-            transition: all 0.15s ease-in-out;
-            box-shadow: 1px 2px 4px rgba(0,0,0,0.08);
-            border-radius: 4px;
-            word-break: break-word;
-            line-height: 1.35;
+            transition: all 0.15s cubic-bezier(0.4, 0, 0.2, 1);
+            box-shadow: 1px 2px 4px rgba(0,0,0,0.06);
+            border-radius: 6px;
+            word-break: break-all;
+            line-height: 1.2;
         }
 
         .sticky-note:hover {
-            transform: translateY(-2px) scale(1.02);
-            box-shadow: 2px 4px 10px rgba(0,0,0,0.15);
-            z-index: 20;
+            transform: translateY(-2px) scale(1.03);
+            box-shadow: 2px 5px 12px rgba(0,0,0,0.15);
+            z-index: 30;
         }
 
         /* 付箋カラーバリエーション */
-        .note-yellow { background-color: #fef9c3; border-left: 4px solid #eab308; color: #713f12; }
-        .note-pink   { background-color: #fce7f3; border-left: 4px solid #ec4899; color: #831843; }
-        .note-blue   { background-color: #dbeafe; border-left: 4px solid #3b82f6; color: #1e3a8a; }
-        .note-green  { background-color: #dcfce7; border-left: 4px solid #22c55e; color: #14532d; }
-        .note-orange { background-color: #ffedd5; border-left: 4px solid #f97316; color: #7c2d12; }
+        .note-yellow { background-color: #fef08a; border-left: 3.5px solid #ca8a04; color: #713f12; }
+        .note-pink   { background-color: #fbcfe8; border-left: 3.5px solid #db2777; color: #831843; }
+        .note-blue   { background-color: #bfdbfe; border-left: 3.5px solid #2563eb; color: #1e3a8a; }
+        .note-green  { background-color: #bbf7d0; border-left: 3.5px solid #16a34a; color: #14532d; }
+        .note-orange { background-color: #ffedd5; border-left: 3.5px solid #ea580c; color: #7c2d12; }
 
-        /* スタンプ用バッジ */
         .stamp-badge {
             display: inline-flex;
             align-items: center;
@@ -74,7 +73,7 @@
             100% { transform: scale(1) rotate(0deg); opacity: 1; }
         }
 
-        /* ツールチップ（メモ拡大表示） */
+        /* ツールチップ（全文プレビュー） */
         .tooltip-text {
             visibility: hidden;
             opacity: 0;
@@ -103,36 +102,40 @@
             <div class="flex items-center gap-3">
                 <i class="fa-solid fa-calendar-days text-amber-700 text-2xl"></i>
                 <h1 class="text-xl font-bold text-stone-800">アナログ風卓上カレンダー</h1>
-                <!-- クラウド同期ステータス表示 -->
-                <span id="syncBadge" class="hidden text-xs px-2.5 py-1 rounded-full font-medium bg-emerald-100 text-emerald-800 border border-emerald-300">
-                    <i class="fa-solid fa-cloud-check mr-1"></i> クラウド同期中
-                </span>
             </div>
             
-            <div class="flex flex-wrap items-center gap-2 sm:gap-4">
+            <div class="flex flex-wrap items-center gap-2 sm:gap-3">
+                <!-- カレンダー移動ボタン -->
                 <div class="flex items-center bg-stone-100 rounded-lg p-1 border border-stone-200">
-                    <button id="prevMonthBtn" class="px-3 py-1.5 hover:bg-white rounded-md transition text-stone-600 hover:text-stone-900">
+                    <button id="prevMonthBtn" class="px-3 py-1.5 hover:bg-white rounded-md transition text-stone-600 hover:text-stone-900 text-sm">
                         <i class="fa-solid fa-chevron-left"></i> 前月
                     </button>
-                    <button id="todayBtn" class="px-3 py-1.5 hover:bg-white rounded-md transition font-medium text-stone-700">
+                    <button id="todayBtn" class="px-3 py-1.5 hover:bg-white rounded-md transition font-medium text-stone-700 text-sm">
                         今月
                     </button>
-                    <button id="nextMonthBtn" class="px-3 py-1.5 hover:bg-white rounded-md transition text-stone-600 hover:text-stone-900">
+                    <button id="nextMonthBtn" class="px-3 py-1.5 hover:bg-white rounded-md transition text-stone-600 hover:text-stone-900 text-sm">
                         次月 <i class="fa-solid fa-chevron-right"></i>
                     </button>
                 </div>
 
+                <!-- データ入出力ボタン -->
+                <button id="dataManagerBtn" class="px-3 py-2 bg-amber-50 hover:bg-amber-100 text-amber-800 rounded-lg transition text-sm flex items-center gap-1.5 border border-amber-200 font-medium">
+                    <i class="fa-solid fa-file-export"></i> データ出力/入出
+                </button>
+
+                <!-- クラウド設定ボタン -->
                 <button id="cloudConfigBtn" class="px-3 py-2 bg-stone-100 hover:bg-stone-200 text-stone-700 rounded-lg transition text-sm flex items-center gap-1.5 border border-stone-300">
                     <i class="fa-solid fa-cloud text-sky-600"></i> クラウド設定
                 </button>
 
+                <!-- 印刷ボタン -->
                 <button id="printBtn" class="px-4 py-2 bg-stone-700 hover:bg-stone-800 text-white rounded-lg transition flex items-center gap-2 shadow-sm text-sm">
                     <i class="fa-solid fa-print"></i> 印刷
                 </button>
             </div>
         </header>
 
-        <!-- カレンダー本体 -->
+        <!-- メインカレンダー -->
         <main class="paper-board rounded-3xl p-4 md:p-8 relative">
             
             <div class="absolute -top-3 left-1/2 -translate-x-1/2 flex gap-8 md:gap-12 no-print">
@@ -151,7 +154,7 @@
                 </div>
                 <div class="text-stone-500 text-xs md:text-sm mt-2 md:mt-0 flex items-center gap-2">
                     <span class="inline-block w-2.5 h-2.5 rounded-full bg-amber-500"></span>
-                    <span>日付枠をクリックしてメモやスタンプを追加できます（メモ上にカーソルを合わせると全文表示）</span>
+                    <span>メモ冒頭4文字が表示されます（ホバー/タップで全文ポップアップ表示）</span>
                 </div>
             </div>
 
@@ -166,9 +169,9 @@
                 <div class="py-2 text-sky-600 bg-sky-50/60 rounded-lg text-sm md:text-base">土</div>
             </div>
 
-            <!-- グリッド -->
+            <!-- カレンダーグリッド -->
             <div id="calendarGrid" class="grid grid-cols-7 gap-1 md:gap-2">
-                <!-- JS動的描画 -->
+                <!-- JavaScriptで動的生成 -->
             </div>
         </main>
     </div>
@@ -200,9 +203,7 @@
                 <div>
                     <label class="block text-xs font-bold text-stone-500 mb-1.5">付箋の色</label>
                     <div class="flex gap-2" id="colorPicker">
-                        <button type="button" data-color="yellow" class="w-8 h-8 rounded-full note-yellow border-2 border-amber-400 flex items-center justify-center text-xs text-amber-800 font-bold color-opt">
-                            <i class="fa-solid fa-check"></i>
-                        </button>
+                        <button type="button" data-color="yellow" class="w-8 h-8 rounded-full note-yellow border-2 border-amber-400 flex items-center justify-center text-xs text-amber-800 font-bold color-opt"><i class="fa-solid fa-check"></i></button>
                         <button type="button" data-color="pink" class="w-8 h-8 rounded-full note-pink border-2 border-transparent flex items-center justify-center text-xs text-pink-800 font-bold color-opt"></button>
                         <button type="button" data-color="blue" class="w-8 h-8 rounded-full note-blue border-2 border-transparent flex items-center justify-center text-xs text-blue-800 font-bold color-opt"></button>
                         <button type="button" data-color="green" class="w-8 h-8 rounded-full note-green border-2 border-transparent flex items-center justify-center text-xs text-green-800 font-bold color-opt"></button>
@@ -212,7 +213,7 @@
 
                 <div>
                     <label for="noteInput" class="block text-xs font-bold text-stone-500 mb-1.5">メモ内容</label>
-                    <textarea id="noteInput" rows="4" class="w-full p-3 bg-stone-50 border border-stone-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-amber-500/50 handwritten text-base" placeholder="メモを入力してください..."></textarea>
+                    <textarea id="noteInput" rows="4" class="w-full p-3 bg-stone-50 border border-stone-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-amber-500/50 handwritten text-base" placeholder="例: 14:00 打ち合わせ&#10;夕方 スーパー買い物"></textarea>
                 </div>
 
                 <div class="flex justify-end gap-2 pt-2">
@@ -262,12 +263,69 @@
         </div>
     </div>
 
+    <!-- データ管理モーダル -->
+    <div id="dataModal" class="fixed inset-0 bg-stone-900/40 backdrop-blur-sm flex items-center justify-center p-4 z-50 hidden">
+        <div class="bg-white rounded-2xl max-w-lg w-full p-6 shadow-2xl border border-stone-100">
+            <div class="flex justify-between items-center mb-4 border-b border-stone-100 pb-3">
+                <h3 class="text-lg font-bold text-stone-800 flex items-center gap-2">
+                    <i class="fa-solid fa-database text-amber-600"></i> データ管理
+                </h3>
+                <button id="closeDataModalBtn" class="text-stone-400 hover:text-stone-600 p-1">
+                    <i class="fa-solid fa-xmark text-xl"></i>
+                </button>
+            </div>
+
+            <div class="space-y-6">
+                <!-- エクスポート -->
+                <div class="bg-stone-50 p-4 rounded-xl border border-stone-200">
+                    <h4 class="font-bold text-sm text-stone-800 mb-1 flex items-center gap-2">
+                        <i class="fa-solid fa-download text-amber-600"></i> データのエクスポート (ダウンロード)
+                    </h4>
+                    <p class="text-xs text-stone-600 mb-3">
+                        全メモ・スタンプをJSONファイルとして保存します。
+                    </p>
+                    <button id="exportJsonBtn" class="w-full py-2.5 bg-amber-600 hover:bg-amber-700 text-white font-medium rounded-lg text-sm transition flex items-center justify-center gap-2">
+                        <i class="fa-solid fa-file-arrow-down"></i> バックアップを保存
+                    </button>
+                </div>
+
+                <!-- インポート -->
+                <div class="bg-stone-50 p-4 rounded-xl border border-stone-200">
+                    <h4 class="font-bold text-sm text-stone-800 mb-1 flex items-center gap-2">
+                        <i class="fa-solid fa-upload text-sky-600"></i> データのインポート (復元)
+                    </h4>
+                    <p class="text-xs text-stone-600 mb-3">
+                        過去のJSONファイルからデータを復元します。
+                    </p>
+                    <input type="file" id="importFileInput" accept=".json" class="hidden">
+                    <button id="triggerImportBtn" class="w-full py-2.5 bg-sky-600 hover:bg-sky-700 text-white font-medium rounded-lg text-sm transition flex items-center justify-center gap-2">
+                        <i class="fa-solid fa-file-arrow-up"></i> ファイルを選択して復元
+                    </button>
+                </div>
+
+                <!-- テキスト直接指定 -->
+                <div>
+                    <label class="block text-xs font-bold text-stone-600 mb-1">JSONテキストプレビュー/直接入力</label>
+                    <textarea id="jsonPreviewArea" rows="3" class="w-full p-2.5 font-mono text-xs bg-stone-50 border border-stone-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-amber-500/50"></textarea>
+                    <div class="flex justify-end gap-2 mt-2">
+                        <button id="copyJsonBtn" class="px-3 py-1.5 bg-stone-200 hover:bg-stone-300 text-stone-700 rounded text-xs transition">
+                            <i class="fa-solid fa-copy mr-1"></i> コピー
+                        </button>
+                        <button id="applyTextJsonBtn" class="px-3 py-1.5 bg-amber-600 hover:bg-amber-700 text-white rounded text-xs transition">
+                            テキストから復元
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <!-- クラウド設定モーダル -->
     <div id="cloudModal" class="fixed inset-0 bg-stone-900/40 backdrop-blur-sm flex items-center justify-center p-4 z-50 hidden">
         <div class="bg-white rounded-2xl max-w-lg w-full p-6 shadow-2xl border border-stone-100">
             <div class="flex justify-between items-center mb-4 border-b border-stone-100 pb-3">
                 <h3 class="text-lg font-bold text-stone-800 flex items-center gap-2">
-                    <i class="fa-solid fa-cloud text-sky-600"></i> 無料クラウド同期設定 (Firebase)
+                    <i class="fa-solid fa-cloud text-sky-600"></i> クラウド保存 (Firebase)
                 </h3>
                 <button id="closeCloudModalBtn" class="text-stone-400 hover:text-stone-600 p-1">
                     <i class="fa-solid fa-xmark text-xl"></i>
@@ -275,18 +333,14 @@
             </div>
             
             <p class="text-xs text-stone-600 leading-relaxed mb-4">
-                Google提供の無料データベース「Firebase Firestore」を設定すると、スマートフォンや他のパソコンとリアルタイムでカレンダーのメモを同期できます。
+                Firebase Firestoreの認証情報を追加すると、スマホとPC間で同一データを自動同期します。
             </p>
 
             <div class="space-y-3 mb-4">
                 <div>
-                    <label class="block text-xs font-bold text-stone-600 mb-1">Firebase 設定 (JSON形式)</label>
-                    <textarea id="firebaseConfigInput" rows="5" class="w-full p-2.5 font-mono text-xs bg-stone-50 border border-stone-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-sky-500/50" placeholder="Firebaseの設定JSONを貼り付けてください"></textarea>
+                    <label class="block text-xs font-bold text-stone-600 mb-1">Firebase Config (JSON)</label>
+                    <textarea id="firebaseConfigInput" rows="4" class="w-full p-2.5 font-mono text-xs bg-stone-50 border border-stone-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-sky-500/50" placeholder='{"apiKey": "...", "projectId": "..."}'></textarea>
                 </div>
-            </div>
-
-            <div class="bg-amber-50 border border-amber-200 rounded-lg p-3 text-xs text-amber-800 mb-4">
-                <i class="fa-solid fa-circle-info mr-1"></i> 未入力の場合は、ブラウザ内ストレージ（LocalStorage）に自動保存されます。
             </div>
 
             <div class="flex justify-end gap-2">
@@ -305,14 +359,13 @@
                 this.editingNoteId = null;
                 this.selectedColor = 'yellow';
 
-                // ローカルデータの取得
                 this.eventsData = this.loadLocalData();
 
-                // DOM要素
                 this.calendarGrid = document.getElementById('calendarGrid');
                 this.yearDisplay = document.getElementById('yearDisplay');
                 this.monthDisplay = document.getElementById('monthDisplay');
                 this.noteModal = document.getElementById('noteModal');
+                this.dataModal = document.getElementById('dataModal');
                 this.modalDateTitle = document.getElementById('modalDateTitle');
                 this.noteInput = document.getElementById('noteInput');
 
@@ -349,7 +402,48 @@
                     window.print();
                 });
 
-                // クラウド設定モーダル表示
+                // データ管理モーダル
+                document.getElementById('dataManagerBtn').addEventListener('click', () => {
+                    this.openDataModal();
+                });
+                document.getElementById('closeDataModalBtn').addEventListener('click', () => {
+                    this.dataModal.classList.add('hidden');
+                });
+
+                document.getElementById('exportJsonBtn').addEventListener('click', () => {
+                    this.exportJsonFile();
+                });
+
+                const fileInput = document.getElementById('importFileInput');
+                document.getElementById('triggerImportBtn').addEventListener('click', () => {
+                    fileInput.click();
+                });
+                fileInput.addEventListener('change', (e) => {
+                    this.importJsonFile(e);
+                });
+
+                document.getElementById('copyJsonBtn').addEventListener('click', () => {
+                    const area = document.getElementById('jsonPreviewArea');
+                    area.select();
+                    document.execCommand('copy');
+                    alert('JSONデータをクリップボードにコピーしました。');
+                });
+
+                document.getElementById('applyTextJsonBtn').addEventListener('click', () => {
+                    const area = document.getElementById('jsonPreviewArea');
+                    try {
+                        const data = JSON.parse(area.value);
+                        this.eventsData = data;
+                        this.saveData();
+                        this.render();
+                        this.dataModal.classList.add('hidden');
+                        alert('データを正常に復元しました。');
+                    } catch (err) {
+                        alert('不正なJSONフォーマットです。');
+                    }
+                });
+
+                // クラウド設定モーダル
                 const cloudModal = document.getElementById('cloudModal');
                 document.getElementById('cloudConfigBtn').addEventListener('click', () => {
                     cloudModal.classList.remove('hidden');
@@ -410,6 +504,45 @@
                 });
             }
 
+            openDataModal() {
+                const jsonStr = JSON.stringify(this.eventsData, null, 2);
+                document.getElementById('jsonPreviewArea').value = jsonStr;
+                this.dataModal.classList.remove('hidden');
+            }
+
+            exportJsonFile() {
+                const jsonStr = JSON.stringify(this.eventsData, null, 2);
+                const blob = new Blob([jsonStr], { type: 'application/json' });
+                const url = URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = `calendar-backup-${new Date().toISOString().slice(0, 10)}.json`;
+                document.body.appendChild(a);
+                a.click();
+                document.body.removeChild(a);
+                URL.revokeObjectURL(url);
+            }
+
+            importJsonFile(event) {
+                const file = event.target.files[0];
+                if (!file) return;
+
+                const reader = new FileReader();
+                reader.onload = (e) => {
+                    try {
+                        const importedData = JSON.parse(e.target.result);
+                        this.eventsData = importedData;
+                        this.saveData();
+                        this.render();
+                        this.dataModal.classList.add('hidden');
+                        alert('データを正常に復元しました。');
+                    } catch (err) {
+                        alert('ファイルの読み込みに失敗しました。');
+                    }
+                };
+                reader.readAsText(file);
+            }
+
             render() {
                 const year = this.currentDate.getFullYear();
                 const month = this.currentDate.getMonth();
@@ -424,14 +557,12 @@
                 const startingDayOfWeek = firstDay.getDay();
                 const totalDays = lastDay.getDate();
 
-                // 前月の余白セル
                 const prevMonthLastDay = new Date(year, month, 0).getDate();
                 for (let i = startingDayOfWeek - 1; i >= 0; i--) {
                     const cell = this.createCellElement(prevMonthLastDay - i, true);
                     this.calendarGrid.appendChild(cell);
                 }
 
-                // 当月の日付
                 const today = new Date();
                 for (let day = 1; day <= totalDays; day++) {
                     const dateStr = `${year}-${String(month + 1).padStart(2, '0')}-${String(day).padStart(2, '0')}`;
@@ -442,7 +573,6 @@
                     this.calendarGrid.appendChild(cell);
                 }
 
-                // 翌月の余白セル
                 const totalRendered = startingDayOfWeek + totalDays;
                 const nextDays = (totalRendered > 35 ? 42 : 35) - totalRendered;
                 for (let i = 1; i <= nextDays; i++) {
@@ -451,10 +581,18 @@
                 }
             }
 
+            // メモ冒頭文字列のフォーマット処理（先頭4文字 + ...）
+            formatShortText(text) {
+                const cleanText = text.replace(/\s+/g, ' ').trim();
+                if (cleanText.length <= 4) {
+                    return cleanText;
+                }
+                return cleanText.substring(0, 4) + '…';
+            }
+
             createCellElement(dayNum, isOtherMonth, dateStr = null, isToday = false, dayOfWeek = 0) {
                 const cell = document.createElement('div');
-                // マスの高さを120px〜150pxに広げて視認性をアップ
-                cell.className = `calendar-cell min-h-[120px] md:min-h-[150px] p-1.5 md:p-2 rounded-xl border border-stone-200/70 flex flex-col justify-between transition-all relative group ${
+                cell.className = `calendar-cell min-h-[110px] md:min-h-[135px] p-1.5 md:p-2 rounded-xl border border-stone-200/70 flex flex-col justify-between transition-all relative group ${
                     isOtherMonth ? 'bg-stone-100/40 text-stone-300' : 'bg-white/90 hover:bg-amber-50/20'
                 } ${isToday ? 'ring-2 ring-amber-500 bg-amber-50/30' : ''}`;
 
@@ -467,7 +605,6 @@
                 if (dayOfWeek === 0) textColorClass = 'text-rose-600';
                 if (dayOfWeek === 6) textColorClass = 'text-sky-600';
 
-                // 日付ヘッダー行
                 const topRow = document.createElement('div');
                 topRow.className = 'flex justify-between items-start mb-1';
 
@@ -478,7 +615,7 @@
                 dayBadge.textContent = dayNum;
                 topRow.appendChild(dayBadge);
 
-                // スタンプ表示エリア
+                // スタンプ表示領域
                 const stampsContainer = document.createElement('div');
                 stampsContainer.className = 'flex flex-wrap gap-0.5 justify-end max-w-[65%]';
                 
@@ -487,7 +624,7 @@
                 if (dayData.stamps && dayData.stamps.length > 0) {
                     dayData.stamps.forEach((stamp, index) => {
                         const stampEl = document.createElement('span');
-                        stampEl.className = 'stamp-badge text-base md:text-lg cursor-pointer hover:scale-125 transition-transform';
+                        stampEl.className = 'stamp-badge text-sm md:text-base cursor-pointer hover:scale-125 transition-transform';
                         stampEl.textContent = stamp;
                         stampEl.title = 'クリックでスタンプ削除';
                         stampEl.addEventListener('click', (e) => {
@@ -500,39 +637,39 @@
                 topRow.appendChild(stampsContainer);
                 cell.appendChild(topRow);
 
-                // メモリスト（見やすさを重視した文字・余白サイズ）
+                // メモ表示領域（冒頭4文字バッジ）
                 const notesContainer = document.createElement('div');
-                notesContainer.className = 'space-y-1.5 overflow-y-auto flex-1 max-h-[85px] md:max-h-[110px] pr-0.5';
+                notesContainer.className = 'space-y-1 overflow-y-auto flex-1 max-h-[75px] md:max-h-[95px] pr-0.5';
 
                 if (dayData.notes && dayData.notes.length > 0) {
                     dayData.notes.forEach((note) => {
                         const noteEl = document.createElement('div');
-                        // 可視性を上げた付箋デザイン
-                        noteEl.className = `sticky-note note-${note.color || 'yellow'} p-1.5 rounded text-xs handwritten relative group/note flex justify-between items-start cursor-pointer`;
+                        noteEl.className = `sticky-note note-${note.color || 'yellow'} px-1.5 py-1 rounded text-xs handwritten relative group/note flex justify-between items-center cursor-pointer`;
                         
+                        // 冒頭4文字テキスト
                         const textSpan = document.createElement('span');
-                        textSpan.className = 'font-medium leading-tight whitespace-pre-wrap break-all line-clamp-3';
-                        textSpan.textContent = note.text;
+                        textSpan.className = 'font-bold tracking-tight text-[11px] md:text-xs';
+                        textSpan.textContent = this.formatShortText(note.text);
 
-                        // 削除ボタン
+                        // 削除アイコン
                         const delBtn = document.createElement('button');
                         delBtn.className = 'opacity-0 group-hover/note:opacity-100 text-stone-400 hover:text-stone-800 ml-1 p-0.5 transition shrink-0';
-                        delBtn.innerHTML = '<i class="fa-solid fa-xmark text-[11px]"></i>';
+                        delBtn.innerHTML = '<i class="fa-solid fa-xmark text-[10px]"></i>';
                         delBtn.addEventListener('click', (e) => {
                             e.stopPropagation();
                             this.deleteNote(dateStr, note.id);
                         });
 
-                        // 全文表示ツールチップ (ホバー時にポップアップ)
+                        // ツールチップ（全文プレビュー）
                         const tooltip = document.createElement('div');
-                        tooltip.className = 'tooltip-text absolute left-0 bottom-full mb-2 w-48 p-2.5 bg-stone-900 text-white text-xs rounded-lg shadow-xl z-50 pointer-events-none whitespace-pre-wrap break-words';
+                        tooltip.className = 'tooltip-text absolute left-0 bottom-full mb-1.5 w-44 md:w-52 p-2.5 bg-stone-900/95 text-white text-xs rounded-lg shadow-xl z-50 pointer-events-none whitespace-pre-wrap handwritten font-normal leading-relaxed';
                         tooltip.textContent = note.text;
 
                         noteEl.appendChild(textSpan);
                         noteEl.appendChild(delBtn);
                         noteEl.appendChild(tooltip);
 
-                        // ノートクリックで編集
+                        // タップ/クリックでモーダル編集
                         noteEl.addEventListener('click', (e) => {
                             e.stopPropagation();
                             this.openModal(dateStr, note);
@@ -544,7 +681,6 @@
 
                 cell.appendChild(notesContainer);
 
-                // 追加用アイコンヒント
                 const addHint = document.createElement('div');
                 addHint.className = 'no-print opacity-0 group-hover:opacity-100 text-stone-400 text-right text-[10px] pt-0.5 transition-opacity';
                 addHint.innerHTML = '<i class="fa-solid fa-plus"></i> 追加';
